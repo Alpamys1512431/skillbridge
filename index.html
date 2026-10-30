@@ -1,0 +1,478 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>SkillBridge</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: slim sidebar and one centred column of content. Indigo accent, quiet greys, generous spacing. */
+:root{
+  --bg:#eef0f7; --frame:#ffffff; --surface:#ffffff; --soft:#f5f6fb; --ink:#171b3a; --muted:#5f6683; --line:#e6e8f2;
+  --accent:#4f46e5; --accent-ink:#ffffff; --accent-text:#4338ca; --accent-soft:#eeedfd;
+  --ok:#15803d; --ok-bg:#e8f6ee; --track:#e6e9f4;
+  --font:'Inter','Segoe UI',system-ui,-apple-system,sans-serif; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#090b17; --frame:#10132a; --surface:#161a33; --soft:#1b2040; --ink:#eceefb; --muted:#a2a8c8; --line:#272c4d;
+    --accent:#5753ea; --accent-ink:#ffffff; --accent-text:#a9acff; --accent-soft:#232652;
+    --ok:#86efac; --ok-bg:#12321f; --track:#262b4d; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#090b17; --frame:#10132a; --surface:#161a33; --soft:#1b2040; --ink:#eceefb; --muted:#a2a8c8; --line:#272c4d;
+  --accent:#5753ea; --accent-ink:#ffffff; --accent-text:#a9acff; --accent-soft:#232652;
+  --ok:#86efac; --ok-bg:#12321f; --track:#262b4d; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.55;
+  padding-block:16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3,p{margin:0}
+h1{font-size:clamp(1.55rem,1.25rem + 1.2vw,1.95rem);font-weight:600;letter-spacing:-.02em;line-height:1.2;text-wrap:balance}
+h2{font-size:1rem;font-weight:600}
+h3{font-size:.95rem;font-weight:600}
+a{color:var(--accent-text)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.app{display:grid;grid-template-columns:208px minmax(0,1fr);max-width:1180px;margin-inline:auto;background:var(--frame);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:640px}
+.side{border-right:1px solid var(--line);padding:22px 14px;display:flex;flex-direction:column;gap:24px;min-width:0}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem;letter-spacing:-.01em;padding:0 8px}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav a,.nav button{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;color:var(--muted);text-decoration:none;font:inherit;font-weight:500;border:0;background:none;width:100%;text-align:left}
+.nav button{cursor:default}
+.nav a:hover{background:var(--soft);color:var(--ink)}
+.nav a[aria-current="page"]{background:var(--accent-soft);color:var(--accent-text);font-weight:600}
+.nav svg,.ic{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.grow{flex:1}
+.who{display:flex;align-items:center;gap:10px;padding:0 8px}
+.av{width:30px;height:30px;border-radius:50%;background:var(--accent-soft);color:var(--accent-text);display:grid;place-items:center;font-size:.7rem;font-weight:700;flex:none}
+.who b{display:block;font-size:.84rem;font-weight:600}.who span{font-size:.76rem;color:var(--muted)}
+.main{min-width:0;background:var(--soft);display:flex;flex-direction:column}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 28px;background:var(--frame);border-bottom:1px solid var(--line);font-size:.85rem}
+.crumb{color:var(--muted)}.crumb b{color:var(--ink);font-weight:600}
+.tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:var(--muted)}
+.badge{font-size:.74rem;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--soft);color:var(--muted);white-space:nowrap}
+.badge.ok{background:var(--ok-bg);color:var(--ok)}
+.badge.ac{background:var(--accent-soft);color:var(--accent-text)}
+.tbtn{min-height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:.78rem;font-weight:600;cursor:pointer}
+.page{width:100%;max-width:980px;margin-inline:auto;padding:32px 28px 40px;display:flex;flex-direction:column;gap:22px;min-width:0}
+.ph{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.ph .t{display:flex;flex-direction:column;gap:6px}
+.kick{font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-text)}
+.sub{color:var(--muted);max-width:60ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;min-width:0}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,300px);gap:20px;align-items:start}
+.stack{display:flex;flex-direction:column;gap:18px;min-width:0}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.between{justify-content:space-between}
+.muted{color:var(--muted)}.small{font-size:.84rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;padding:0 20px;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:600;cursor:pointer;text-decoration:none}
+.btn:hover{filter:brightness(1.1)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;filter:none}
+.btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.btn.block{width:100%}
+.stat span.l{font-size:.82rem;color:var(--muted)}
+.stat b{font-size:1.6rem;font-weight:600;letter-spacing:-.02em;display:block;line-height:1.25}
+.bar{height:6px;border-radius:99px;background:var(--track);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;background:var(--accent)}
+.sk{display:flex;flex-direction:column;gap:6px}
+.sk .l{display:flex;justify-content:space-between;gap:8px;font-size:.88rem}
+.sk .l span:last-child{font-variant-numeric:tabular-nums;color:var(--muted)}
+.flow{display:flex;align-items:center;justify-content:center;gap:12px;background:var(--soft);border-radius:12px;padding:16px;flex-wrap:wrap}
+.node{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 16px;text-align:center;min-width:110px}
+.node b{display:block;font-size:.86rem}.node span{font-size:.74rem;color:var(--muted)}
+.arrow{color:var(--muted)}
+.steps{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px;overflow-x:auto;list-style:none;margin:0}
+.steps li{flex:1;min-width:max-content}
+.steps a{display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 12px;border-radius:8px;text-decoration:none;color:var(--muted);font-weight:500;font-size:.86rem;white-space:nowrap}
+.steps .n{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:.7rem;font-weight:700}
+.steps .done .n{background:var(--accent-soft);border-color:transparent;color:var(--accent-text)}
+.steps .cur a{background:var(--accent-soft);color:var(--accent-text);font-weight:600}
+.steps .cur .n{border-color:var(--accent);color:var(--accent-text)}
+.steps .n svg{width:12px;height:12px;stroke-width:2.6}
+.list{display:flex;flex-direction:column;gap:14px;margin:0;padding:0;list-style:none}
+.list li{display:flex;gap:12px;align-items:flex-start}
+.list .ic{margin-top:3px;color:var(--ok)}
+.list b{display:block;font-size:.92rem;font-weight:600}.list span{font-size:.84rem;color:var(--muted)}
+.file{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.file:last-child{border-bottom:0;padding-bottom:0}
+.file:first-of-type{padding-top:0}
+.file code{font-family:var(--mono);font-size:.86rem;font-weight:600}
+.file .sz{margin-left:auto;font-size:.8rem;color:var(--muted);white-space:nowrap}
+.note{border-radius:12px;padding:14px 16px;font-size:.88rem;background:var(--accent-soft);color:var(--accent-text);display:flex;gap:10px;align-items:flex-start}
+.note.ok{background:var(--ok-bg);color:var(--ok)}
+.chkcard{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 0;border-bottom:1px solid var(--line)}
+.chkcard:last-child{border-bottom:0;padding-bottom:0}
+.chkcard:first-child{padding-top:0}
+.res{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.82rem;color:var(--ok);background:var(--ok-bg);padding:6px 12px;border-radius:8px}
+.browser{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.browser .url{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid var(--line);font-size:.8rem;color:var(--muted);font-family:var(--mono)}
+.browser .url span:first-child{flex:1}
+.browser .pg{padding:20px 22px}
+.browser .pg h3{font-size:1.35rem;font-weight:600}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:.9rem}
+.chk b{display:block;font-weight:600}.chk span{font-size:.8rem;color:var(--muted)}
+.chk input{width:18px;height:18px;margin-top:2px;accent-color:var(--accent);flex:none}
+.chk .ic{color:var(--ok);margin-top:2px}
+.tasks{display:flex;flex-direction:column;gap:2px;list-style:none;margin:0;padding:0}
+.tasks li{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:8px;font-size:.88rem}
+.tasks li.cur{background:var(--accent-soft);color:var(--accent-text);font-weight:600}
+.tasks .ic{color:var(--ok)}.tasks .cur .ic{color:var(--accent-text)}
+.num{font-size:1.25rem;font-weight:600;color:var(--accent-text);font-variant-numeric:tabular-nums}
+.fbi{display:flex;gap:12px}
+.fbi .ic{margin-top:3px;color:var(--ok)}
+.fbi .k{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.fbi b{display:block;font-weight:600}.fbi p{font-size:.88rem;color:var(--muted);margin-top:2px}
+.quote{border-left:3px solid var(--accent);padding-left:14px}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top;font-size:.88rem}
+th{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.scroll{overflow-x:auto;max-width:100%}
+details{border-top:1px solid var(--line);padding-top:14px}
+summary{cursor:pointer;font-weight:600;font-size:.92rem}
+summary+*{margin-top:12px}
+pre{margin:0;background:var(--soft);border-radius:10px;padding:14px;overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.5;max-width:100%}
+code{font-family:var(--mono);font-size:.88em}
+.skip{position:absolute;left:-9999px;top:8px;background:var(--accent);color:var(--accent-ink);padding:8px 14px;border-radius:8px;border:0;font:inherit;font-weight:600;z-index:30}
+.skip:focus{left:16px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.flow.pf{flex-wrap:nowrap;gap:8px}.flow.pf .node{flex:1;min-width:0;padding:10px 8px}
+.okt{color:var(--ok)}
+.lk{font-weight:600;font-size:.88rem}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-size:.74rem;font-weight:600;padding:3px 10px;border-radius:8px;background:var(--soft);color:var(--muted)}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.lab2{display:block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}
+.rows{display:flex;flex-direction:column;gap:18px}
+.rows>.sk+.sk{border-top:1px solid var(--line);padding-top:18px}
+.mile{display:flex;gap:14px;padding:18px 0;border-top:1px solid var(--line)}
+.mile:first-of-type{border-top:0;padding-top:4px}
+.mile:last-of-type{padding-bottom:0}
+.mn{width:34px;height:34px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-weight:600;font-size:.8rem;color:var(--muted);flex:none}
+.mn.ok{background:var(--ok-bg);color:var(--ok)}.mn.ac{background:var(--accent-soft);color:var(--accent-text)}
+.mile .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.tl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px}
+.tl li{display:flex;gap:12px;align-items:flex-start}
+.tl i{width:10px;height:10px;border-radius:50%;background:var(--track);margin-top:7px;flex:none}
+.tl li.cur i{background:var(--accent)}
+.tl b{display:block;font-size:.9rem;font-weight:600}
+.tl .when{margin-left:auto;font-size:.78rem;color:var(--muted);text-align:right}
+.gr{display:grid;grid-template-columns:minmax(110px,150px) minmax(0,1fr) auto auto;gap:12px;align-items:center;font-size:.88rem}
+.gr .bb{display:flex;flex-direction:column;gap:4px}
+.bar.before i{opacity:.35}
+.gr .pts{min-width:62px;text-align:right;font-weight:600}
+.soft{background:var(--soft);border-radius:12px;padding:14px 16px}
+.dlv{border-top:1px solid var(--line);padding-top:12px}
+.dlv:first-of-type{border-top:0;padding-top:0}
+.dlv summary{display:flex;align-items:flex-start;gap:12px;font-weight:600}
+.dlv summary .sub2{display:block;font-weight:400;font-size:.82rem;color:var(--muted)}
+.dlv .more{padding:12px 0 2px 30px;display:flex;flex-direction:column;gap:10px}
+.dlv .ic{margin-top:2px;color:var(--accent-text)}
+@media (max-width:900px){.cols{grid-template-columns:minmax(0,1fr)}.g3{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:760px){.two{grid-template-columns:minmax(0,1fr)}.gr{grid-template-columns:minmax(0,1fr) auto}.gr .bb{grid-column:1/-1;order:3}.tl li{flex-wrap:wrap}.tl .when{margin-left:22px;text-align:left}}
+@media (max-width:760px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{border-right:0;border-bottom:1px solid var(--line);padding:12px 14px;gap:8px}
+  .who,.grow{display:none}
+  .nav{flex-direction:row;overflow-x:auto}
+  .nav a,.nav button{white-space:nowrap;flex:none;width:auto}
+  .top{padding:10px 16px}.page{padding:20px 16px 32px}
+  .flow,.flow.pf{flex-direction:column}.flow.pf .node{width:100%;flex:none}.arrow{transform:rotate(90deg)}
+  .card{padding:16px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<button class="skip" type="button" data-action="skip">Skip to content</button>
+<div class="app">
+  <aside class="side" aria-label="Sidebar">
+    <div class="brand"><svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#4f46e5"/><path d="M8 20c3-8 13-8 16 0M8 20v3M24 20v3M12 20v-4M16 20v-6M20 20v-4" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>SkillBridge</div>
+    <nav class="nav" aria-label="Main">
+      <a data-nav="dashboard" href="#dashboard"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Dashboard</a>
+      <a data-nav="skills" href="#skills"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>Skills</a>
+      <a data-nav="learning-path" href="#learning-path"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19c0-6 14-4 14-10M5 19a2 2 0 100-.01M19 9a2 2 0 100-.01"/></svg>Learning Path</a>
+      <a data-nav="projects" href="#brief"><svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>Projects</a>
+      <a data-nav="progress" href="#progress"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17l5-5 4 4 7-8"/></svg>Progress</a>
+      <a data-nav="portfolio" href="#portfolio"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5h6v2"/></svg>Portfolio</a>
+      <a data-nav="about" href="#about"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>About</a>
+    </nav>
+    <div class="grow"></div>
+    <div class="who"><span class="av" aria-hidden="true">AS</span><div><b>Amina Sadykova</b><span>Student</span></div></div>
+  </aside>
+  <div class="main">
+    <header class="top" id="top"></header>
+    <main class="page" id="view"></main>
+  </div>
+</div>
+
+<script>
+(function(){
+  var P={
+    bars:'<path d="M5 20V10M12 20V4M19 20v-7"/>',
+    check:'<path d="M5 12l4 4 10-10"/>',
+    clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 00-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0012 3z"/>'
+  };
+  function I(n,style){return '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"'+(style?' style="'+style+'"':'')+'>'+P[n]+'</svg>'}
+  var SKILLS=[['Linux fundamentals',40,65],['Networking basics',35,55],['Web deployment',20,50]];
+  var RUBRIC=[['Working deployment',36,40],['Validation evidence',30,35],['Clear explanation',22,25]];
+  var FILES=[['deployment-notes.md','2.4 KB','Architecture, commands and troubleshooting'],['evidence.txt','1.2 KB','Service, listening port and HTTP checks'],['screenshot.png','164 KB','Lab address and “Hello, SkillBridge!” page']];
+  var TASKS=['Connect to the lab','Install Nginx','Publish the web page','Verify service & port','Capture evidence'];
+  var ORDER=['dashboard','brief','lab','review','submitted','feedback'];
+  var ROUTES=ORDER.concat(['skills','learning-path','progress','portfolio','about']);
+  var CRUMB={dashboard:'Dashboard',brief:'Project brief',lab:'Practical lab',review:'Review your work',submitted:'Submission',feedback:'Mentor feedback',skills:'Skills','learning-path':'Learning Path',progress:'Progress',portfolio:'Portfolio',about:'About this prototype'};
+  var SKN=[['Nginx is active; you identified and corrected the document root.','Record the exact file path and command so the fix is repeatable.'],['Explained the request flow and checked TCP 80 and HTTP 200.','Compare HTTP headers with the response body to verify the right page.'],['Served “Hello, SkillBridge!” from your Linux + Nginx lab.','Add a response-body check and an expected vs actual result.']];
+  var CHECKS=[
+    ['nginx','Is Nginx running?','Service status','active'],
+    ['port','Is port 80 open?','Listening ports','LISTEN  0.0.0.0:80  (TCP)'],
+    ['http','Does the site respond?','Page response','HTTP 200 OK · Server: nginx/1.18.0']
+  ];
+  var FUNCS=[
+    ['Dashboard, project brief, submission status','done','Work with illustrative data for one student.'],
+    ['Practical lab','partly','The three server checks show fixed example results. There is no real Linux server.'],
+    ['Evidence check and submission','partly','The checks work. File names are examples and no file is uploaded.'],
+    ['Mentor feedback and skill update','partly','One fixed example (mentor Maya Patel, 88 / 100), opened with a demo button.'],
+    ['Skills, learning path, progress and portfolio pages','partly','They use the same illustrative data and change after the mentor feedback is opened. The next projects (database, release) and “Retake assessment” are not built.'],
+    ['Accounts, real mentor review, notifications','planned','Described in the Assignment 1 report.'],
+    ['Database connection','planned','The schema is designed and tested in SQLite. This page does not read or write it.'],
+    ['Accessibility (WCAG 2.2 AA)','partly','Keyboard use, visible focus, labels and a dark theme are built in. No formal audit yet.']
+  ];
+  var QUERY="SELECT s.name AS skill, b.pct AS before, a.pct AS after,\n       a.pct - b.pct AS change\nFROM skills s\nJOIN skill_progress b ON b.skill_id = s.skill_id\n     AND b.source = 'foundation_assessment'\nJOIN skill_progress a ON a.skill_id = s.skill_id\n     AND a.source = 'mentor_assessment'\n     AND a.user_id = b.user_id\nWHERE b.user_id = 11\nORDER BY s.skill_id;";
+
+  var state={route:null,passed:false,secrets:false,labDone:false,confirm:false,submitted:false,checks:{},log:[]};
+  var $view=document.getElementById('view'),$top=document.getElementById('top');
+
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+  function device(){return window.matchMedia('(max-width:700px)').matches?'mobile':'web'}
+  function log(t){state.log.unshift({t:new Date(),type:t,device:device()})}
+  function fmt(d){return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
+  function avg(i){return Math.round(SKILLS.reduce(function(a,s){return a+s[i]},0)/SKILLS.length)}
+  function bar(p){return '<div class="bar" aria-hidden="true"><i style="width:'+p+'%"></i></div>'}
+  function pill(k,t){return '<span class="badge '+k+'">'+t+'</span>'}
+
+  function labReady(){return state.secrets&&Object.keys(state.checks).length===CHECKS.length}
+
+  function stepper(r){
+    var idx={brief:0,lab:1,review:2,submitted:3,feedback:4}[r];
+    var items=[['Project brief','brief'],['Practical lab','lab'],['Submission',state.submitted?'submitted':'review'],['Mentor feedback','feedback']];
+    return '<ol class="steps" aria-label="Project stages">'+items.map(function(it,i){
+      var cls=i<idx?'done':(i===idx?'cur':'');
+      return '<li class="'+cls+'"><a href="#'+it[1]+'"'+(i===idx?' aria-current="step"':'')+'><span class="n">'+(i<idx?I('check'):(i+1))+'</span>'+it[0]+'</a></li>';
+    }).join('')+'</ol>';
+  }
+  function head(kick,title,sub,badge){return '<div class="ph"><div class="t"><span class="kick">'+kick+'</span><h1 tabindex="-1">'+title+'</h1><p class="sub">'+sub+'</p></div>'+(badge||'')+'</div>'}
+
+  function vDash(){
+    var p=state.passed,sc=p?2:1;
+    var snap=SKILLS.map(function(s){return '<div class="sk"><div class="l"><span>'+s[0]+'</span><span>'+s[sc]+'%</span></div>'+bar(s[sc])+'</div>'}).join('');
+    var proj=p?
+      '<section class="card stack" aria-labelledby="rp"><div class="row between"><span class="kick">Completed project</span>'+pill('ok','Passed · 88 / 100')+'</div><h2 id="rp" style="font-size:1.3rem">Deploy your first web application</h2><p class="muted">Your mentor passed the deployment. Read the feedback to see what to improve next.</p><div><a class="btn" href="#feedback">View feedback →</a></div></section>':
+      '<section class="card stack" aria-labelledby="rp"><div class="row between"><span class="kick">Recommended project</span>'+pill('','Beginner')+'</div><h2 id="rp" style="font-size:1.3rem">Deploy your first web application</h2><p class="muted">Publish a simple site on a Linux server with Nginx, then prove it works using service and network checks.</p>'+
+      '<div class="flow"><div class="node"><b>Browser</b><span>Requests the page</span></div><span class="arrow" aria-hidden="true">→</span><div class="node"><b>Linux + Nginx</b><span>10.0.2.15 : TCP 80</span></div><span class="arrow" aria-hidden="true">→</span><div class="node"><b>Web page</b><span>One HTML file</span></div></div>'+
+      '<div class="row between"><span class="small muted">90 minutes · 5 guided tasks · mentor reviewed</span><a class="btn" href="#brief">Review project brief →</a></div></section>';
+    return '<div class="ph"><div class="t"><span class="kick">Your next step</span><h1 tabindex="-1">Welcome back, Amina</h1><p class="sub">Turn your systems theory into practice. '+(p?'Your first project is complete.':'Your next project is ready.')+'</p></div></div>'+
+    '<div class="g3"><div class="card stat"><span class="l">Foundation skill progress</span><b>'+avg(sc)+'%</b><span class="small muted">Across 3 assessed skills</span></div>'+
+    '<div class="card stat"><span class="l">Practical projects</span><b>'+(p?1:0)+' of 3</b><span class="small muted">'+(p?'First project complete':'Your first project starts here')+'</span></div>'+
+    '<div class="card stat"><span class="l">Learning path</span><b>Stage '+(p?2:1)+' of 3</b><span class="small muted">'+(p?'Databases & networking':'Systems & deployment')+'</span></div></div>'+
+    '<div class="cols">'+proj+'<section class="card stack" aria-labelledby="ss"><h2 id="ss">Your skills</h2>'+snap+'<p class="small muted">'+(p?'Updated after the mentor review.':'From your foundation assessment.')+'</p></section></div>';
+  }
+
+  function vBrief(){
+    var learn=[['Install and manage a Linux service','Install Nginx and check its status with systemctl.'],['Connect networking theory to a working application','Find the server address, listening port and HTTP response.'],['Validate a deployment and document the evidence','Show the page, explain your checks and record a troubleshooting step.']].map(function(x){return '<li>'+I('check')+'<div><b>'+x[0]+'</b><span>'+x[1]+'</span></div></li>'}).join('');
+    var del=[['deployment-notes.md','Explain the architecture, list your commands and one issue you fixed.'],['evidence.txt','Include the nginx status, TCP 80 output and the curl response (HTTP 200).'],['screenshot.png','Show the page at http://10.0.2.15 with the heading “Hello, SkillBridge!”.']].map(function(x){return '<div class="file"><div><code>'+x[0]+'</code><p class="small muted">'+x[1]+'</p></div></div>'}).join('');
+    return head('Project SB-01','Deploy your first web application','Build a small deployment, understand each layer and validate it with evidence.')+stepper('brief')+
+    '<div class="cols"><div class="stack"><section class="card stack" aria-labelledby="sc"><h2 id="sc">The scenario</h2><p class="muted">A small team needs an internal welcome page. You are the junior IT technician who must serve it from an Ubuntu Linux machine using Nginx.</p><h3>What you will learn</h3><ul class="list">'+learn+'</ul></section>'+
+    '<section class="card stack" aria-labelledby="dl"><h2 id="dl">What to hand in</h2><div>'+del+'</div></section></div>'+
+    '<section class="card stack" aria-labelledby="yl"><h2 id="yl">Your practical lab</h2><div class="small"><div class="row between"><span class="muted">Time</span><b>90 minutes</b></div><div class="row between"><span class="muted">Level</span><b>Beginner · 5 tasks</b></div></div><div class="small muted">Graded by your mentor: working deployment 40%, validation evidence 35%, clear explanation 25%.</div><a class="btn block" href="#lab">Start lab →</a></section></div>';
+  }
+
+  function vLab(){
+    var done=state.labDone,cnt=done?5:4,ran=Object.keys(state.checks).length;
+    var tasks=TASKS.map(function(t,i){var d=i<4||done;return '<li class="'+(!d?'cur':'')+'">'+(d?I('check'):I('clock'))+t+'</li>'}).join('');
+    var cards=CHECKS.map(function(c){
+      var r=state.checks[c[0]];
+      return '<div class="chkcard"><div><b>'+c[1]+'</b><p class="small muted">'+c[2]+'</p></div>'+(r?'<div class="res">'+I('check')+'<span>'+c[3]+'</span></div>':'<button class="btn ghost" type="button" data-action="runcheck" data-id="'+c[0]+'">Run check</button>')+'</div>';
+    }).join('');
+    var ev=CHECKS.map(function(c){var r=state.checks[c[0]];return '<div class="chk">'+(r?I('check'):I('clock','color:var(--muted)'))+'<div><b>'+c[1].replace('?','')+'</b><span>'+(r?'Result recorded':'Run this check first')+'</span></div></div>'}).join('');
+    return head('Project SB-01','Practical lab','Four tasks are done. Run the three server checks to capture your evidence.',pill(done?'ok':'ac',done?'Complete · 100%':'In progress · 80%'))+stepper('lab')+
+    '<div class="cols"><div class="stack"><section class="card stack" aria-labelledby="sv"><div class="row between"><h2 id="sv">Check your server</h2><span class="small muted">'+ran+' of 3 run</span></div><p class="small muted">Each check reads the lab server and saves the result as evidence. Nothing to type.</p><div>'+cards+'</div></section>'+
+    '<div class="browser"><div class="url"><span>http://10.0.2.15</span>'+pill('ok','HTTP 200')+'</div><div class="pg"><h3>Hello, SkillBridge!</h3><p class="muted" style="margin-top:6px">My first web application is running on Nginx.</p></div></div></div>'+
+    '<div class="stack"><section class="card stack" aria-labelledby="pt"><div class="row between"><h2 id="pt">Tasks</h2><span class="small muted">'+cnt+' of 5</span></div>'+bar(cnt*20)+'<ul class="tasks">'+tasks+'</ul></section>'+
+    '<section class="card stack" aria-labelledby="fe"><h2 id="fe">Final evidence check</h2>'+ev+
+    '<label class="chk" for="sec"><input type="checkbox" id="sec"'+(state.secrets?' checked':'')+'><div><b>Review files for secrets</b><span>No passwords or access tokens</span></div></label>'+
+    '<button class="btn block" type="button" id="cmp" data-action="complete"'+(labReady()?'':' disabled')+'>Complete & review →</button></section></div></div>';
+  }
+
+  function vReview(){
+    var fl=FILES.map(function(f){return '<div class="file"><div><code>'+f[0]+'</code><p class="small muted">'+f[2]+'</p></div><span class="sz">'+f[1]+'</span></div>'}).join('');
+    var ck=[['Service and network evidence','nginx active, TCP 80, HTTP 200'],['Correct application page','Heading and lab address visible'],['Architecture and checks explained','Browser, server and one troubleshooting step'],['No secrets in the evidence','All three files reviewed']].map(function(x){return '<div class="chk">'+I('check')+'<div><b>'+x[0]+'</b><span>'+x[1]+'</span></div></div>'}).join('');
+    return head('Project SB-01','Ready for mentor review?','Check your files and confirm the evidence before you submit.',pill('ok',(state.labDone?5:4)+' of 5 tasks complete'))+stepper('review')+
+    '<div class="cols"><section class="card stack" aria-labelledby="dp"><div class="row between"><h2 id="dp">Your files</h2><span class="small muted">3 files · 168 KB</span></div><div>'+fl+'</div></section>'+
+    '<section class="card stack" aria-labelledby="sl"><h2 id="sl">Submission checklist</h2>'+ck+
+    '<label class="chk" for="cf"><input type="checkbox" id="cf"'+(state.confirm?' checked':'')+'><div><span style="font-size:.84rem">I confirm this is my own work from my SkillBridge lab.</span></div></label><button class="btn block" type="button" id="cs" data-action="confirm"'+(state.confirm?'':' disabled')+'>Confirm submission →</button><p class="small muted">Demo only. No files are sent. Feedback usually arrives within 2 working days.</p><a class="small" href="#lab">← Back to lab</a></section></div>';
+  }
+
+  function vSubmitted(){
+    return head('Project SB-01','Your work is submitted','Your deployment evidence is ready for a mentor’s review.')+stepper('submitted')+
+    '<div class="note ok">'+I('check')+'<div><b>Submission SB-1042 recorded</b><div class="small">9 October 2026 at 14:32 · 3 files · example confirmation</div></div></div>'+
+    '<div class="cols"><section class="card stack" aria-labelledby="ws"><h2 id="ws">Where your submission stands</h2><ul class="list"><li>'+I('check')+'<div style="flex:1"><b>Submitted</b><span>All three files are attached to SB-1042.</span></div></li><li>'+I('clock','color:var(--muted)')+'<div style="flex:1"><b>Awaiting mentor review</b><span>Maya Patel will review your deployment and evidence.</span></div></li><li>'+I('bars','color:var(--muted)')+'<div style="flex:1"><b>Feedback and skill update</b><span>Comments, rubric scores and your next project, usually within 2 working days.</span></div></li></ul></section>'+
+    '<section class="card stack" aria-labelledby="ym"><h2 id="ym">Your mentor</h2><div class="row"><span class="av" aria-hidden="true">MP</span><div><b>Maya Patel</b><p class="small muted">Systems & infrastructure mentor</p></div></div><button class="btn block" type="button" data-action="feedback">Preview mentor feedback (demo)</button><a class="small" href="#dashboard">Back to dashboard</a></section></div>';
+  }
+
+  function vFeedback(){
+    var sk=SKILLS.map(function(s){return '<div class="sk"><div class="l"><span>'+s[0]+'</span><span>'+s[1]+'% → <b style="color:var(--ok)">'+s[2]+'%</b></span></div>'+bar(s[2])+'</div>'}).join('');
+    var rb=RUBRIC.map(function(r){return '<div class="row between"><span class="small">'+r[0]+'</span><b>'+r[1]+' / '+r[2]+'</b></div>'}).join('');
+    return head('Project SB-01','Your first deployment, completed','Read what went well and what to improve next.',pill('ok','Passed · 88 / 100'))+stepper('feedback')+
+    '<div class="cols"><section class="card stack" aria-labelledby="fm"><div class="row"><span class="av" aria-hidden="true">MP</span><div><h2 id="fm">Feedback from Maya Patel</h2><p class="small muted">Systems & infrastructure mentor · illustrative</p></div></div>'+
+    '<p class="quote">“Amina, you have a working deployment and a clear explanation of the request flow. Your evidence makes the result easy to verify. Good first project.”</p>'+
+    '<div class="fbi">'+I('check')+'<div><span class="k">Working deployment</span><b>You connected the architecture to the application</b><p>Your screenshot shows “Hello, SkillBridge!” at the correct lab address, and your notes explain how Nginx serves index.html over TCP 80.</p></div></div>'+
+    '<div class="fbi">'+I('bulb','color:var(--accent-text)')+'<div><span class="k">Validation evidence</span><b>Add one more layer of proof</b><p>Also run curl http://10.0.2.15 and record the page heading. A 200 response alone could still be the default page.</p></div></div>'+
+    '<div class="fbi">'+I('bulb','color:var(--accent-text)')+'<div><span class="k">Explanation</span><b>Make your troubleshooting reproducible</b><p>Add the exact file path and command you used to replace the page, so another technician can repeat your steps.</p></div></div></section>'+
+    '<div class="stack"><section class="card stack" aria-labelledby="yp"><h2 id="yp">Your skills have progressed</h2><div class="row between"><span class="num" style="font-size:1.5rem">'+avg(1)+'% → '+avg(2)+'%</span>'+pill('ok','+'+(avg(2)-avg(1))+' pts')+'</div>'+sk+'</section>'+
+    '<section class="card stack" aria-labelledby="ab"><h2 id="ab">Score breakdown</h2>'+rb+'</section><a class="btn ghost" href="#dashboard">Back to dashboard</a></div></div>';
+  }
+
+  function vAbout(){
+    var f=FUNCS.map(function(r){return '<tr><td><b>'+r[0]+'</b></td><td><span class="badge '+(r[1]==='done'?'ok':(r[1]==='partly'?'ac':''))+'">'+r[1][0].toUpperCase()+r[1].slice(1)+'</span></td><td class="muted">'+r[2]+'</td></tr>'}).join('');
+    var lg=state.log.length?'<div class="scroll"><table><caption class="vh">Usage events recorded in this tab</caption><thead><tr><th scope="col">Time</th><th scope="col">event_type</th><th scope="col">device</th></tr></thead><tbody>'+state.log.slice(0,25).map(function(e){return '<tr><td>'+fmt(e.t)+'</td><td><code>'+e.type+'</code></td><td>'+e.device+'</td></tr>'}).join('')+'</tbody></table></div>':'<p class="muted small">No events yet. Go through the scenario from the dashboard.</p>';
+    return '<div class="ph"><div class="t"><h1 tabindex="-1">About this prototype</h1><p class="sub">A clickable prototype with six steps: dashboard, project brief, lab, review, submission and mentor feedback. All names, scores and feedback are illustrative.</p></div></div>'+
+    '<section class="card stack" aria-labelledby="a1"><h2 id="a1">What works today</h2><div class="scroll"><table><caption class="vh">Functions and their status</caption><thead><tr><th scope="col">Function</th><th scope="col">Status</th><th scope="col">Notes</th></tr></thead><tbody>'+f+'</tbody></table></div></section>'+
+    '<section class="card stack" aria-labelledby="a2"><h2 id="a2">Where the data is stored</h2><p class="muted">In this prototype the data lives in the page and in your browser tab. It is not connected to a database and nothing is sent anywhere. The database design (the Assignment 3 database plus six new tables for skill progress, tasks, files, scores and usage events) is in the SQL script delivered with the report.</p>'+
+    '<details><summary>Data feature: skill progress (SQL)</summary><p class="muted small" style="margin-bottom:12px">Skills are recorded before the project and after the mentor assessment. The page shows the change, '+avg(1)+'% to '+avg(2)+'%, the average of the three skills. It is a fixed calculation, not machine learning.</p><pre>'+QUERY+'</pre></details>'+
+    '<details><summary>Usage log for this tab</summary><div>'+lg+'<div style="margin-top:12px"><button class="btn ghost" type="button" data-action="clearlog"'+(state.log.length?'':' disabled')+'>Clear log</button></div></div></details></section>';
+  }
+
+  function nextCard(p,kick){
+    if(p)return '<section class="card stack" aria-labelledby="nx"><span class="kick">'+kick+'</span><h2 id="nx" style="font-size:1.2rem">Connect a database</h2><div>'+pill('ac','Stage 2 of 3 · Ready to start')+'</div><p class="small muted">Practise a working application-to-database connection and strengthen Networking basics, now at 55%.</p><p class="small muted">About 2 hours · Guided practical project</p><button class="btn block" type="button" disabled>Review project brief</button><p class="small muted">This brief is not part of the prototype.</p></section>';
+    return '<section class="card stack" aria-labelledby="nx"><span class="kick">'+kick+'</span><h2 id="nx" style="font-size:1.2rem">Deploy your first web application</h2><div>'+pill('ac','Stage 1 of 3 · Ready to start')+'</div><p class="small muted">Publish a simple site on a Linux server with Nginx, then prove it works with service and network checks.</p><p class="small muted">90 minutes · 5 guided tasks · Mentor reviewed</p><a class="btn block" href="#brief">Review project brief →</a></section>';
+  }
+
+  function vSkills(){
+    var p=state.passed,sc=p?2:1;
+    var rows=SKILLS.map(function(s,i){
+      return '<div class="sk" style="gap:10px"><div class="l"><b>'+s[0]+'</b><span>'+(p?s[1]+'% → <b class="okt">'+s[2]+'%</b>':s[1]+'%')+'</span></div>'+bar(s[sc])+
+      (p?'<div class="two"><div><span class="lab2 okt">Demonstrated</span><p class="small muted">'+SKN[i][0]+'</p></div><div><span class="lab2 muted">Keep practising</span><p class="small muted">'+SKN[i][1]+'</p></div></div>':'')+'</div>';
+    }).join('');
+    var low=p?'Web deployment is your lowest current indicator at 50%. Check the response body and record the expected heading before moving on.':'Web deployment is your lowest indicator at 20%. Your first project practises it directly.';
+    var focus='<section class="card stack" style="background:var(--accent-soft);border-color:transparent" aria-labelledby="fc"><span class="kick">Focus next</span><h2 id="fc" style="font-size:1.15rem">'+(p?'Validate the page, not just the response':'Start with your first project')+'</h2><p class="small" style="color:var(--accent-text)">'+low+'</p>'+(p?'<a class="btn" href="#learning-path">View learning path →</a>':'<a class="btn" href="#brief">Review project brief →</a>')+'</section>';
+    var evid=p?'<section class="card stack" aria-labelledby="ev"><h2 id="ev">What the evidence tells you</h2><p class="small"><b>Strongest foundation: Linux fundamentals · 65%</b></p><p class="small muted">You can run a working service and explain the architecture. Next, make your validation and troubleshooting reproducible.</p><a class="lk" href="#portfolio">See your project evidence →</a></section>':'';
+    var proj=p?'<section class="card stack" aria-labelledby="mr"><div class="row between"><div class="row">'+I('check','color:var(--ok)')+'<div><b id="mr">Deploy your first web application</b><p class="small muted">Maya Patel · Passed 88 / 100 · Submission SB-1042</p></div></div>'+pill('ok','Mentor-reviewed')+'</div><a class="lk" href="#feedback">Review detailed mentor feedback →</a></section>':'';
+    return head('Your skill profile',p?'See your progress. Know what to practise.':'Know where you start',p?'Your first deployment has strengthened all three foundation skills.':'These indicators come from your foundation assessment. Finish your first project to update them.')+
+    '<div class="g3"><div class="card stat"><span class="l">Foundation skill progress</span><b>'+avg(sc)+'%</b><span class="small muted">'+(p?'Up from '+avg(1)+'% before this project':'From your foundation assessment')+'</span></div>'+
+    '<div class="card stat"><span class="l">Practical evidence</span><b>'+(p?'1 assessed project':'No assessed project')+'</b><span class="small muted">'+(p?'Deploy your first web application':'Your first project is ready')+'</span></div>'+
+    '<div class="card stat"><span class="l">Next learning stage</span><b>Stage '+(p?2:1)+' of 3</b><span class="small muted">'+(p?'Connect a database':'Deploy your first web application')+'</span></div></div>'+
+    '<div class="cols"><div class="stack"><section class="card stack" aria-labelledby="cs1"><div class="row between"><h2 id="cs1">Current foundation skills</h2>'+pill('',p?'Updated 10 Oct 2026':'Foundation assessment')+'</div><p class="small muted">'+(p?'Based on your foundation assessment and mentor-reviewed project SB-01. Progress shows learning development, not certification.':'Progress shows learning development, not certification. Mentor evidence appears here after your first project.')+'</p><div class="rows">'+rows+'</div></section>'+proj+'</div>'+
+    '<div class="stack">'+focus+evid+'<section class="card stack" aria-labelledby="wr"><h2 id="wr">When to reassess</h2><p class="small muted">Retake the foundation assessment after more practice to check your understanding. Your saved project and mentor feedback stay in your portfolio.</p></section></div></div>';
+  }
+
+  function vPath(){
+    var p=state.passed;
+    var m1=p?'<div class="mile"><span class="mn ok">'+I('check')+'</span><div class="body"><div class="row between"><h3>Deploy a web app</h3>'+pill('ok','Completed')+'</div><p class="small muted">Deploy your first web application on a Linux server with Nginx and verify the request flow.</p><p class="small muted">90 minutes · 5 guided tasks · Prerequisite: Foundation assessment</p><p class="small okt">Passed 88 / 100 · Reviewed by Maya Patel · 10 Oct 2026</p><a class="lk" href="#feedback">View completed project →</a></div></div>':
+      '<div class="mile"><span class="mn ac">01</span><div class="body"><div class="row between"><h3>Deploy a web app</h3>'+pill('ac','Recommended now')+'</div><p class="small muted">Deploy your first web application on a Linux server with Nginx and verify the request flow.</p><p class="small muted">90 minutes · 5 guided tasks · Prerequisite: Foundation assessment</p><a class="lk" href="#brief">Review project brief →</a></div></div>';
+    var m2='<div class="mile"><span class="mn'+(p?' ac':'')+'">02</span><div class="body"><div class="row between"><h3>Connect a database</h3>'+pill(p?'ac':'',p?'Recommended now':'Upcoming')+'</div><p class="small muted">Build on your server skills and practise application-to-database networking.</p><p class="small muted">About 2 hours · Guided practical project · Prerequisite: Deploy a web app'+(p?' — complete':'')+'</p><p class="small muted">Planned evidence: connection check, configuration notes and query result.</p><span class="small muted">Brief not included in this prototype</span></div></div>';
+    var m3='<div class="mile"><span class="mn">03</span><div class="body"><div class="row between"><h3>Automate a release</h3>'+pill('','Upcoming')+'</div><p class="small muted">Turn a manual deployment into a repeatable release with a script and verification checks.</p><p class="small muted">About 2 hours · Practical project · Prerequisite: Connect a database</p><p class="small muted">Planned evidence: release script, run log and post-release checks.</p><span class="small muted">Milestone preview not included in this prototype</span></div></div>';
+    var tip=p?'<section class="card stack" style="background:var(--accent-soft);border-color:transparent" aria-labelledby="bs"><span class="kick">Before you start · optional</span><h2 id="bs" style="font-size:1.1rem">Make your validation stronger</h2><p class="small" style="color:var(--accent-text)">Run <code>curl http://10.0.2.15</code> and check for “Hello, SkillBridge!”. Add expected vs actual results and the exact file path and command to your notes.</p><p class="small" style="color:var(--accent-text)">Suggested practice · About 15 minutes · No resubmission required.</p></section>':'';
+    return head('Your personalized learning path',p?'Build on your first deployment':'Start with your first deployment',p?'A practical route from systems foundations to a repeatable application release.':'A practical route from systems foundations to a repeatable application release. Your first project is next.',pill('ac','Stage '+(p?2:1)+' of 3'))+
+    '<section class="card stack" aria-labelledby="sd"><div class="row between"><div><h2 id="sd">Systems &amp; deployment foundations</h2><p class="small muted">'+(p?'1 of 3 projects complete · Next project ready to start':'0 of 3 projects complete · First project ready to start')+'</p></div><span class="num" style="font-size:1.6rem;color:var(--ink)">'+(p?33:0)+'%</span></div>'+bar(p?33:0)+'</section>'+
+    '<div class="cols"><div class="stack"><section class="card" aria-labelledby="pm"><h2 id="pm" style="margin-bottom:14px">Your project milestones</h2>'+m1+m2+m3+'</section>'+
+    '<div class="note">'+I('bars')+'<div>This sequence builds on your assessed skills. Estimated effort for upcoming projects is a guide; work at your own pace.</div></div></div>'+
+    '<div class="stack">'+nextCard(p,'Next practical activity')+tip+
+    '<section class="card stack" aria-labelledby="rf"><h2 id="rf">Need a refresher?</h2><p class="small muted">Review the Linux, HTTP and Nginx steps linked in your project brief.</p><a class="lk" href="#brief">Open project brief →</a></section></div></div>';
+  }
+
+  function vProgress(){
+    var p=state.passed;
+    var gr=SKILLS.map(function(s){
+      return '<div class="gr"><span>'+s[0]+'</span><div class="bb"><div class="bar before" aria-hidden="true"><i style="width:'+s[1]+'%"></i></div>'+(p?bar(s[2]):'')+'</div><span class="small muted">'+s[1]+'%'+(p?' → '+s[2]+'%':'')+'</span><span class="pts okt">'+(p?'+'+(s[2]-s[1])+' pts':'')+'</span></div>';
+    }).join('');
+    var tl=(p?[['Mentor assessment received','Passed 88 / 100; foundation skill progress updated to '+avg(2)+'%.','10 Oct 2026 · 09:10'],['Project evidence submitted','SB-1042 · Deployment screenshot, checks and deployment notes.','Submission'],['First web application deployed','Completed the Linux + Nginx lab and corrected the document root.','Practical lab']]:[]).concat([['Foundation assessment completed','Starting foundation skill progress: '+avg(1)+'%.','Before project']]);
+    var tlh=tl.map(function(t,i){return '<li class="'+(i===0?'cur':'')+'"><i aria-hidden="true"></i><div><b>'+t[0]+'</b><span class="small muted">'+t[1]+'</span></div><span class="when">'+t[2]+'</span></li>'}).join('');
+    var proj=p?'<section class="card stack" aria-labelledby="pj"><div class="row between"><span class="kick">Project SB-01 · Completed</span>'+pill('ok','Passed · 88 / 100')+'</div><h2 id="pj" style="font-size:1.3rem">Deploy your first web application</h2><p class="muted small">Served “Hello, SkillBridge!” with Linux + Nginx, checked TCP 80 and HTTP 200, explained the request flow and corrected the document root.</p><div class="note ok" style="justify-content:space-between;flex-wrap:wrap"><span class="row">'+I('check')+'Practical lab</span><span class="row">'+I('check')+'Submission</span><span class="row">'+I('check')+'Mentor review</span></div><div class="row between"><span class="small muted">3 of 3 deliverables saved with feedback</span><a class="lk" href="#portfolio">View in Portfolio →</a></div><p class="small muted">Maya Patel · Submission SB-1042 · Reviewed 10 Oct 2026 at 09:10</p></section>':
+      '<section class="card stack" aria-labelledby="pj"><span class="kick">Project SB-01 · Not started</span><h2 id="pj" style="font-size:1.3rem">Deploy your first web application</h2><p class="muted small">Your first project will appear here with its lab, submission and mentor review.</p><div><a class="btn" href="#brief">Review project brief →</a></div></section>';
+    var fb=p?'<section class="card stack" aria-labelledby="kb"><div><h2 id="kb">Keep building on your feedback</h2><p class="small muted">From Maya Patel’s review of project SB-01</p></div><div><b>Validate the page, not just HTTP 200</b><p class="small muted">Run curl http://10.0.2.15 and check for “Hello, SkillBridge!”. Compare headers with the response body; record expected vs actual results.</p></div><div><b>Make the fix repeatable</b><p class="small muted">Add the exact file path and command used to replace the page to your troubleshooting notes.</p></div><div class="soft"><b class="small">Optional practice · About 15 minutes</b><p class="small muted">Your project is passed. No resubmission required.</p></div><a class="lk" href="#feedback">Read full mentor feedback →</a></section>':'';
+    var gl=[['Deploy a web app',p?'Completed':'Ready to start',p?'ok':'ac'],['Connect a database',p?'Ready to start':'Upcoming',p?'ac':''],['Automate a release','Upcoming','']].map(function(g){return '<div class="row between"><span class="small">'+g[0]+'</span>'+pill(g[2],g[1])+'</div>'}).join('');
+    return head('Your learning progress',p?'See how far you’ve come':'Your journey starts here',p?'Your first deployment is complete. Here’s what changed and where to go next.':'Finish your first project to see how your skills and evidence grow.')+
+    '<div class="g3"><div class="card stat stack" style="gap:8px"><span class="l">Learning path completion</span><b>'+(p?33:0)+'%</b>'+bar(p?33:0)+'<span class="small muted">'+(p?1:0)+' of 3 projects complete</span></div>'+
+    '<div class="card stat"><span class="l">Foundation skill progress</span><b>'+(p?avg(1)+'% → '+avg(2)+'%':avg(1)+'%')+'</b><span class="small '+(p?'okt':'muted')+'">'+(p?'+'+(avg(2)-avg(1))+' pts · Before project → after mentor assessment':'From your foundation assessment')+'</span></div>'+
+    '<div class="card stat"><span class="l">Practical evidence saved</span><b>'+(p?3:0)+' deliverables</b><span class="small muted">'+(p?'From 1 completed, mentor-reviewed project':'Saved after your first submission')+'</span></div></div>'+
+    '<div class="cols"><div class="stack"><section class="card stack" aria-labelledby="gp"><div class="row between"><h2 id="gp">Growth from your first project</h2><a class="lk" href="#skills">View Skills →</a></div><p class="small muted">Foundation assessment compared with your mentor-reviewed deployment.</p><div class="stack" style="gap:16px">'+gr+'</div><p class="small muted">Two assessment snapshots, not a continuous trend. Learning indicators, not certifications.</p></section>'+proj+
+    '<section class="card stack" aria-labelledby="la"><h2 id="la">Recent learning activity</h2><ul class="tl">'+tlh+'</ul></section></div>'+
+    '<div class="stack">'+nextCard(p,'Next on your learning path')+fb+'<section class="card stack" aria-labelledby="pg"><h2 id="pg">Your path at a glance</h2>'+gl+'<a class="lk" href="#learning-path">View learning path →</a></section></div></div>';
+  }
+
+  function vPortfolio(){
+    var p=state.passed;
+    var prof='<section class="card"><div class="row between" style="gap:20px"><div class="row" style="gap:16px"><span class="av" style="width:56px;height:56px;font-size:1rem" aria-hidden="true">AS</span><div><h2 style="font-size:1.2rem">Amina Sadykova</h2><p class="small muted">IT systems foundations · Student · Fall 2026</p><p class="small muted">Building practical skills in Linux, networking and web deployment.</p></div></div><div class="row" style="gap:32px"><div class="stat"><b>'+(p?1:0)+' project'+(p?'':'s')+'</b><span class="l">Mentor-reviewed</span></div><div class="stat"><b>'+(p?3:0)+' deliverables</b><span class="l">Saved with feedback</span></div></div></div></section>';
+    var dl=[
+      ['image','Deployment screenshot','“Hello, SkillBridge!” at the correct lab address.','screenshot.png · 164 KB','<div class="browser"><div class="url"><span>http://10.0.2.15</span>'+pill('ok','HTTP 200')+'</div><div class="pg"><h3>Hello, SkillBridge!</h3><p class="muted" style="margin-top:6px">My first web application is running on Nginx.</p></div></div>'],
+      ['term','Service and network checks','Active Nginx service, TCP 80 and HTTP 200 response.','evidence.txt · 1.2 KB','<pre>Service status    active\nListening ports  LISTEN  0.0.0.0:80  (TCP)\nPage response    HTTP 200 OK · Server: nginx/1.18.0</pre>'],
+      ['doc','Deployment notes','Request flow, document-root issue and explanation of the fix.','deployment-notes.md · 2.4 KB','<p class="small muted">Request flow: the browser asks 10.0.2.15 on TCP 80, Nginx answers and serves index.html. Issue: Nginx first showed the wrong page because the document root pointed to the wrong folder; I corrected the root and reloaded the service.</p>']
+    ].map(function(d){
+      var ic={image:'<rect x="4" y="5" width="16" height="14" rx="2"/><path d="M4 16l4-4 4 4 3-3 5 5"/>',term:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 10l3 2-3 2M12 15h5"/>',doc:'<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/>'}[d[0]];
+      return '<details class="dlv"><summary><svg class="ic" viewBox="0 0 24 24" aria-hidden="true">'+ic+'</svg><span style="flex:1"><span>'+d[1]+'</span><span class="sub2">'+d[2]+'</span></span></summary><div class="more"><span class="small muted">'+d[3]+'</span>'+d[4]+'</div></details>';
+    }).join('');
+    var tech=['Linux','Nginx','HTML','HTTP','TCP 80'].map(function(t){return '<span class="chip">'+t+'</span>'}).join('');
+    var proj=p?'<section class="card stack" aria-labelledby="pp"><div class="row between"><span class="kick">Project SB-01 · Completed project</span>'+pill('ok','Passed · 88 / 100')+'</div><h2 id="pp" style="font-size:1.35rem">Deploy your first web application</h2><p class="muted small">Published a static “Hello, SkillBridge!” page on a Linux server with Nginx. Verified the service and network response, explained the request flow and corrected a wrong document root.</p><div class="chips">'+tech+'</div>'+
+      '<div class="flow pf"><div class="node"><b>Browser request</b><span>http://10.0.2.15</span></div><span class="arrow" aria-hidden="true">→</span><div class="node"><b>Linux + Nginx</b><span>Active service · TCP 80</span></div><span class="arrow" aria-hidden="true">→</span><div class="node"><b>index.html</b><span>“Hello, SkillBridge!”</span></div></div>'+
+      '<div class="row between"><h3>Saved deliverables</h3><span class="small muted">3 of 3 included</span></div><div class="stack" style="gap:12px">'+dl+'</div>'+
+      '<div class="row between" style="border-top:1px solid var(--line);padding-top:14px"><span class="small muted">Submission SB-1042 · Reviewed 10 October 2026 at 09:10</span><a class="btn ghost" href="#submitted">View submission →</a></div></section>':
+      '<section class="card stack" aria-labelledby="pp"><span class="kick">Nothing here yet</span><h2 id="pp" style="font-size:1.3rem">Your first piece of evidence is waiting</h2><p class="muted">Completed projects, saved deliverables and mentor feedback appear here after your mentor reviews your first submission.</p><div><a class="btn" href="#brief">Review project brief →</a></div></section>';
+    var side=p?'<section class="card stack" aria-labelledby="mv"><h2 id="mv">Mentor validation</h2><div class="row"><span class="av" aria-hidden="true">MP</span><div><b>Maya Patel</b><p class="small muted">Systems &amp; infrastructure mentor</p></div></div><p class="quote small">“Amina, you have a working deployment and a clear explanation of the request flow. Your evidence makes the result easy to verify. Good first project.”</p>'+RUBRIC.map(function(r){return '<div class="row between"><span class="small muted">'+r[0]+'</span><b class="num" style="font-size:.9rem">'+r[1]+' / '+r[2]+'</b></div>'}).join('')+'<p class="small muted">Next: add a response-body check and exact commands to your troubleshooting notes.</p><a class="lk" href="#feedback">Read full mentor feedback →</a></section>'+
+      '<section class="card stack" aria-labelledby="se"><h2 id="se">Skills evidenced by this project</h2>'+SKILLS.map(function(s){return '<div class="sk"><div class="l"><span>'+s[0]+'</span><span>'+s[2]+'%</span></div>'+bar(s[2])+'</div>'}).join('')+'<p class="small muted">Learning indicators from mentor assessment, not professional certifications.</p><a class="lk" href="#skills">View your skill profile →</a></section>':'';
+    var nxt='<section class="card stack" aria-labelledby="nb"><div class="row between"><h2 id="nb">Build your next piece of evidence</h2>'+pill('','Suggestions')+'</div><div class="two"><div><b class="small">Connect a database</b><p class="small muted">'+(p?'Next on your learning path':'After your first deployment')+' · Not started</p></div><div><b class="small">Automate a release</b><p class="small muted">After your database project · Not started</p></div></div><a class="lk" href="#learning-path">Explore your learning path →</a></section>';
+    return head('Your practical evidence','Your learning, backed by real work','Keep your completed projects, deliverables and mentor feedback together.','<a class="btn ghost" href="#learning-path">View learning path →</a>')+prof+
+    '<div class="cols"><div class="stack">'+proj+nxt+'</div><div class="stack">'+side+'</div></div>';
+  }
+
+  var VIEWS={dashboard:vDash,brief:vBrief,lab:vLab,review:vReview,submitted:vSubmitted,feedback:vFeedback,skills:vSkills,'learning-path':vPath,progress:vProgress,portfolio:vPortfolio,about:vAbout};
+
+  function topbar(r){
+    var i=ORDER.indexOf(r),root=document.documentElement;
+    var dark=root.getAttribute('data-theme')==='dark'||(!root.getAttribute('data-theme')&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+    $top.innerHTML='<div class="crumb"><b>'+CRUMB[r]+'</b></div><div class="tools">'+(i>=0?'<span>Step '+(i+1)+' of 6</span>':'')+'<span class="badge">Demo data</span><button class="tbtn" type="button" data-action="theme" aria-pressed="'+dark+'">'+(dark?'Light theme':'Dark theme')+'</button></div>';
+  }
+  function render(focus){
+    var r=state.route;
+    topbar(r);
+    $view.innerHTML=VIEWS[r]();
+    var nav={dashboard:'dashboard',brief:'projects',lab:'projects',review:'projects',submitted:'projects',feedback:'projects',skills:'skills','learning-path':'learning-path',progress:'progress',portfolio:'portfolio',about:'about'}[r];
+    document.querySelectorAll('[data-nav]').forEach(function(a){if(a.getAttribute('data-nav')===nav)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+    if(focus){var h=$view.querySelector('h1');if(h){h.focus({preventScroll:true});window.scrollTo(0,0)}}
+  }
+  function enter(n){
+    if(n==='dashboard')log('dashboard_opened');
+    if(n==='brief')log('brief_opened');
+    if(n==='lab')log('lab_started');
+    if(n==='feedback'){log('feedback_opened');state.passed=true}
+    if(n==='skills')log('skills_opened');
+    if(n==='learning-path')log('learning_path_opened');
+    if(n==='progress')log('progress_opened');
+    if(n==='portfolio')log('portfolio_opened');
+  }
+  function onHash(){
+    var h=(location.hash||'#dashboard').slice(1),n=ROUTES.indexOf(h)>=0?h:'dashboard';
+    if(n!==state.route){enter(n);state.route=n;render(true)}
+  }
+  function go(r){if(location.hash==='#'+r)onHash();else location.hash=r}
+
+  document.addEventListener('change',function(e){
+    if(e.target.id==='sec'){state.secrets=e.target.checked;document.getElementById('cmp').disabled=!labReady()}
+    if(e.target.id==='cf'){state.confirm=e.target.checked;document.getElementById('cs').disabled=!state.confirm}
+  });
+  document.addEventListener('click',function(e){
+    var t=e.target.closest('[data-action]');if(!t)return;
+    var a=t.getAttribute('data-action');
+    if(a==='theme'){var root=document.documentElement,dark=root.getAttribute('data-theme')==='dark'||(!root.getAttribute('data-theme')&&window.matchMedia('(prefers-color-scheme: dark)').matches);root.setAttribute('data-theme',dark?'light':'dark');render(false)}
+    else if(a==='skip'){var h=$view.querySelector('h1');if(h)h.focus()}
+    else if(a==='complete'){if(!labReady())return;state.labDone=true;log('lab_completed');go('review')}
+    else if(a==='confirm'){if(!state.confirm)return;state.submitted=true;log('submission_confirmed');go('submitted')}
+    else if(a==='feedback'){go('feedback')}
+    else if(a==='runcheck'){var id=t.getAttribute('data-id');if(!state.checks[id]){state.checks[id]=true;log('command_run');render(false);var nx=$view.querySelector('[data-action="runcheck"]')||document.getElementById('sec');if(nx)nx.focus({preventScroll:true})}}
+    else if(a==='clearlog'){state.log=[];render(false)}
+  });
+  window.addEventListener('hashchange',onHash);
+  onHash();
+})();
+</script>
+
+</body></html>
